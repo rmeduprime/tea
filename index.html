@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Form</title>
+    <link rel="stylesheet"  href="style.css">
+</head>
+<body>
+   
+    <h1 class="head">Tea Form</h1>
+    
+    <form id="teaForm">
+       
+        <br><br><br>
+        <div class="container" >
+        <select  name="name" id="name">
+            <option disabled selected>Select Name</option>
+            <option value="Arpan">Arpan</option>
+            <option value="Rhea">Rhea</option>
+            <option value="Sarang">Sarang</option>
+            <option value="Atit">Atit</option>
+            <option value="Prasad">Prasad</option>
+            <option value="Abhishek">Abhishek</option>
+            <option value="Karan">Karan</option>
+            <option value="Shubham">Shubham</option>
+            <option value="Satish">Satish</option>
+        </select>
+        <br><br><br><br>
+        <select   name="drink" id="drink">
+            <option disabled selected>None</option>
+            <option value="halftea">Half Tea</option>
+            <option value="fulltea">Full Tea</option>
+            <option value="fullcoffee">Full Coffee</option>
+            <option value="halfcoffee">Half Coffee</option>
+            <option value="fulllemon">Full Lemon</option>
+            <option value="halflemon">Half Lemon</option>
+        </select>
+        
+
+        </div>
+
+        <br><br><br><br><br>
+        <br><br><br><br><br><br>
+        <br><br><br><br><br><br>
+        <br>
+        <div><button class="button-27" role="button" type="submit">Submit</button>
+        </div>
+        <br><br>
+        <br>
+
+
+       
+        
+        
+    </form>
+    
+    <table id="data-table" style="border-collapse: collapse;">
+        <thead>
+          <!-- Table headers will be dynamically generated -->
+        </thead>
+        <tbody>
+          <!-- Table rows will be dynamically generated -->
+        </tbody>
+    </table>
+
+<!-- 
+    <div data-sheetdb-url="https://sheetdb.io/api/v1/y3x6b1cpaxl8t" class="count">
+        <h3>Drink Counts</h3>
+        <p>Full Tea:{{Full tea}}</p>
+        <p>Half Tea:{{Half tea}}</p>
+        <p>Full Coffee:{{Full Coffee}}</p>
+        <p>Half Coffee:{{Half Coffee}}</p>
+        <p>Full Lemon tea:{{Full Lemon}}</p>
+        <p>Half Lemon tea:{{Half Lemon}}</p>
+    </div> -->
+   
+
+    <!-- Google sheets api:
+    424243491462-b050rcs6472sms72qomgj6ret4dfqpk3.apps.googleusercontent.com -->
+
+    <script>
+        const form = document.getElementById('teaForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();  // Stop the page from refreshing
+
+            // Get form data
+            const formData = new FormData(form);
+
+            // Send the data to the Google Apps Script URL
+            fetch('https://script.google.com/macros/s/AKfycbzloN3sdFa7buii2r-DcZitNun36dnvacIz-a5w48YPXb-N1PJrVSfKTUdBoxOcW7eC/exec', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    alert('Order placed successfully!');
+                    form.reset();  // Clear the form
+                } else {
+                    alert('Failed to submit. Please try again later.');
+                }
+            });
+        });
+    </script>
+    <script>
+        const sheetID = "1HDwLCgJmbPwazxCvqqrFrxI_CvAO8NnwZVfla8kTm5w"; // Replace with your actual Google Sheet ID
+        const apiKey = "AIzaSyD5AzHlwbJj9-kzDLwsYH8JMMp-0Hin0k8"; // Replace with your actual API Key
+
+    // URL format for fetching data as JSON
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetID}/values/Sheet1?key=${apiKey}`;
+
+        // Fetch data from Google Sheets
+            // Fetch data from Google Sheets
+            fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const rows = data.values;
+        const tableHead = document.querySelector("#data-table thead");
+        const tableBody = document.querySelector("#data-table tbody");
+
+        // Generate table headers
+        const headers = rows[0];
+        let headerRow = "<tr>";
+        headers.forEach(header => {
+          headerRow += `<th style="border: 1px solid black;">${header}</th>`;
+        });
+        headerRow += "</tr>";
+        tableHead.innerHTML = headerRow;
+
+        // Generate table rows
+        rows.slice(1).forEach(row => {
+          let rowHtml = "<tr>";
+          row.forEach(cell => {
+            rowHtml += `<td style="border: 1px solid black;">${cell}</td>`;
+          });
+          rowHtml += "</tr>";
+          tableBody.innerHTML += rowHtml;
+        });
+      })
+      .catch(error => console.error("Error fetching data:", error));
+
+
+        // Replace with your SheetDB API URL
+        // const apiUrl = 'https://sheetdb.io/handlebars.js';
+
+        // async function fetchData() {
+        //     try {
+        //         const response = await fetch(apiUrl);
+        //         const data = await response.json();
+        //         displayData(data);
+        //     } catch (error) {
+        //         console.error("Error fetching data:", error);
+        //     }
+        // }
+
+        // function displayData(data) {
+        //     const container = document.getElementById('data-container');
+        //     container.innerHTML = ''; // Clear previous data if any
+
+        //     data.forEach((row) => {
+        //         const rowDiv = document.createElement('div');
+        //         rowDiv.innerHTML = `
+        //             <p><strong>Name:</strong> ${row.name}</p>
+                    
+        //             <hr>
+        //         `;
+        //         container.appendChild(rowDiv);
+        //     });
+        // }
+
+        // // Fetch data on page load
+        // fetchData();
+    </script>
+</body>
+
+</html>
